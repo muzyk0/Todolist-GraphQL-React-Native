@@ -1,16 +1,13 @@
-query Me {
-    me {
-        id
-        email
-        name
-    }
-}
-
 fragment UserSnippet on User {
     id
     name
     email
-    archived
+}
+
+query Me {
+    me {
+        ...UserSnippet
+    }
 }
 
 query Users {

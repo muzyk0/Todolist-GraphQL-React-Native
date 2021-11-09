@@ -1,0 +1,31 @@
+fragment TaskSnippet on Task {
+    id
+    title
+    description
+}
+
+fragment TodolistSnippet on Todolist {
+    id
+    title
+    description
+}
+
+query Todolists {
+    todolists {
+        ...TodolistSnippet
+        tasks {
+            ...TaskSnippet
+        }
+    }
+}
+
+mutation AddTodolist($title: String!, $description: String) {
+    addTodolist(title: $title, description: $description) {
+        id
+        title
+    }
+}
+
+mutation RemoveTodolist($id: Int!) {
+    removeTodolist(id: $id)
+}

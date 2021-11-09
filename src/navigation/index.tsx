@@ -19,7 +19,7 @@ import useColorScheme from "../../hooks/useColorScheme";
 import LoginScreen from "../screens/LoginScreen";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabOneScreen from "../screens/TabOneScreen";
+import HomeScreen from "../screens/HomeScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import {
     RootStackParamList,
@@ -79,45 +79,45 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
     const { data, loading, error } = useMeQuery();
 
-    return (
-        <Stack.Navigator>
-            {loading ? (
+    let body = null;
+
+    if (loading || !data) {
+        body = (
+            <Stack.Screen
+                name="Root"
+                component={LoadingScreen}
+                options={{ headerShown: false }}
+            />
+        );
+    } else if (error) {
+        body = (
+            <Stack.Screen
+                name="Root"
+                component={ErrorScreen}
+                options={{ headerShown: false }}
+            />
+        );
+    } else if (data.me) {
+        body = (
+            <>
                 <Stack.Screen
                     name="Root"
-                    component={LoadingScreen}
+                    component={BottomTabNavigator}
                     options={{ headerShown: false }}
                 />
-            ) : error ? (
                 <Stack.Screen
-                    name="Root"
-                    component={ErrorScreen}
-                    options={{ headerShown: false }}
+                    name="NotFound"
+                    component={NotFoundScreen}
+                    options={{ title: "Oops!" }}
                 />
-            ) : data?.me ? (
-                <>
-                    <Stack.Screen
-                        name="Root"
-                        component={BottomTabNavigator}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="NotFound"
-                        component={NotFoundScreen}
-                        options={{ title: "Oops!" }}
-                    />
-                    <Stack.Group screenOptions={{ presentation: "modal" }}>
-                        <Stack.Screen name="Modal" component={ModalScreen} />
-                    </Stack.Group>
-                </>
-            ) : (
-                <Stack.Screen
-                    name="Root"
-                    component={LoginScreen}
-                    options={{ headerShown: true }}
-                />
-            )}
-        </Stack.Navigator>
-    );
+                <Stack.Group screenOptions={{ presentation: "modal" }}>
+                    <Stack.Screen name="Modal" component={ModalScreen} />
+                </Stack.Group>
+            </>
+        );
+    }
+
+    return <Stack.Navigator>{body}</Stack.Navigator>;
 }
 
 /**
@@ -131,18 +131,18 @@ function BottomTabNavigator() {
 
     return (
         <BottomTab.Navigator
-            initialRouteName="TabOne"
+            initialRouteName="Home"
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme].tint,
             }}
         >
             <BottomTab.Screen
-                name="TabOne"
-                component={TabOneScreen}
-                options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-                    title: "Tab One",
+                name="Home"
+                component={HomeScreen}
+                options={({ navigation }: RootTabScreenProps<"Home">) => ({
+                    title: "Home",
                     tabBarIcon: ({ color }) => (
-                        <TabBarIcon name="code" color={color} />
+                        <TabBarIcon name="list-ul" color={color} />
                     ),
                     headerRight: () => (
                         <Pressable
