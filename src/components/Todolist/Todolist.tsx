@@ -1,10 +1,13 @@
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation, useNavigationState } from "@react-navigation/core";
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
 import { Button, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import useColorScheme from "../../../hooks/useColorScheme";
 
 import Colors from "../../constants/Colors";
 import { TodolistsQuery } from "../../generated/graphql";
+import { RootTabParamList } from "../../types";
 import { IconButton } from "../Login/IconButton";
 import { MonoText } from "../StyledText";
 import { Text, View } from "../Themed";
@@ -18,9 +21,13 @@ interface Props {
 }
 
 export default function Todolist({
-    todolist: { title, description },
+    todolist: { title, description, tasks },
     onRemoveTodolist,
+    ...props
 }: Props) {
+    const navigation = useNavigation();
+    const colorScheme = useColorScheme();
+
     return (
         <View style={styles.container}>
             <View>
@@ -43,36 +50,30 @@ export default function Todolist({
 
             <View style={styles.actionButtons}>
                 <View style={styles.IconButton}>
-                    <Pressable>
-                        <FontAwesome name="edit" />
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate("Todolist", {
+                                tasks: tasks,
+                            } as any);
+                        }}
+                    >
+                        <FontAwesome
+                            name="edit"
+                            size={15}
+                            color={Colors[colorScheme].text}
+                        />
                     </Pressable>
                 </View>
                 <View style={styles.IconButton}>
                     <Pressable hitSlop={20} onPress={onRemoveTodolist}>
-                        <FontAwesome name="remove" />
+                        <FontAwesome
+                            name="remove"
+                            size={15}
+                            color={Colors[colorScheme].text}
+                        />
                     </Pressable>
                 </View>
             </View>
-
-            {/* <View
-                    style={[
-                        styles.codeHighlightContainer,
-                        styles.homeScreenFilename,
-                    ]}
-                    darkColor="rgba(255,255,255,0.05)"
-                    lightColor="rgba(0,0,0,0.05)"
-                >
-                    <MonoText>{}</MonoText>
-                </View>
-
-                <Text
-                    style={styles.getStartedText}
-                    lightColor="rgba(0,0,0,0.8)"
-                    darkColor="rgba(255,255,255,0.8)"
-                >
-                    Change any of the text, save the file, and your app will
-                    automatically update.
-                </Text> */}
         </View>
     );
 }
@@ -96,7 +97,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: 20,
         height: 20,
-        backgroundColor: "#fff",
         borderRadius: 5,
         marginLeft: 5,
     },

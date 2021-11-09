@@ -9,6 +9,7 @@ import {
     NavigatorScreenParams,
 } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { TaskSnippetFragment } from "./generated/graphql";
 
 declare global {
     namespace ReactNavigation {
@@ -18,6 +19,7 @@ declare global {
 
 export type RootStackParamList = {
     Root: NavigatorScreenParams<RootTabParamList> | undefined;
+    Todolist: NavigatorScreenParams<RootTabParamList> | undefined;
     Modal: undefined;
     NotFound: undefined;
 };
@@ -28,7 +30,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 export type RootTabParamList = {
     Home: undefined;
     TabTwo: undefined;
-    TodoList: undefined;
+    TodoList: { tasks: TaskSnippetFragment };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

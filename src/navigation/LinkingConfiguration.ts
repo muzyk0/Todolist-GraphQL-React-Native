@@ -27,6 +27,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                     },
                 },
             },
+            Todolist: {},
             Modal: "modal",
             NotFound: "*",
         },

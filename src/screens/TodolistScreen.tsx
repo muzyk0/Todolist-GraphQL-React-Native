@@ -16,17 +16,11 @@ import {
 } from "../generated/graphql";
 import { RootTabScreenProps } from "../types";
 
-interface AddTodolist {
-    title: string;
-}
-
-const schema = yup.object({
-    title: yup.string().min(5),
-});
-
 export default function TodolistScreen({
     navigation,
-}: RootTabScreenProps<"Home">) {
+    route,
+}: RootTabScreenProps<"TodoList">) {
+    const { tasks } = route.params;
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollContainer}>
@@ -36,6 +30,7 @@ export default function TodolistScreen({
                     lightColor="#eee"
                     darkColor="rgba(255,255,255,0.1)"
                 />
+                <Text>{JSON.stringify(tasks)}</Text>
             </ScrollView>
         </View>
     );

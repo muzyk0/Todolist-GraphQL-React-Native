@@ -94,10 +94,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
                     </View>
                     <View style={styles.iconButton}>
                         <Pressable onPress={onAddTodolistSubmit}>
-                            <FontAwesome
-                                name="plus-circle"
-                                style={{ fontSize: 20 }}
-                            />
+                            <FontAwesome name="plus-circle" size={20} />
                         </Pressable>
                     </View>
                     <FontAwesome />

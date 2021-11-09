@@ -32,6 +32,7 @@ import { useMeQuery } from "../generated/graphql";
 import { useInitializeApp } from "../../hooks/useInitializeApp";
 import LoadingScreen from "../screens/LoadingScreen";
 import ErrorScreen from "../screens/ErrorScreen";
+import TodolistScreen from "../screens/TodolistScreen";
 
 export default function Navigation({
     colorScheme,
@@ -81,7 +82,7 @@ function RootNavigator() {
 
     let body = null;
 
-    if (loading || !data) {
+    if (loading) {
         body = (
             <Stack.Screen
                 name="Root"
@@ -97,7 +98,7 @@ function RootNavigator() {
                 options={{ headerShown: false }}
             />
         );
-    } else if (data.me) {
+    } else if (data?.me) {
         body = (
             <>
                 <Stack.Screen
@@ -105,6 +106,7 @@ function RootNavigator() {
                     component={BottomTabNavigator}
                     options={{ headerShown: false }}
                 />
+                <Stack.Screen name="Todolist" component={TodolistScreen} />
                 <Stack.Screen
                     name="NotFound"
                     component={NotFoundScreen}
@@ -114,6 +116,14 @@ function RootNavigator() {
                     <Stack.Screen name="Modal" component={ModalScreen} />
                 </Stack.Group>
             </>
+        );
+    } else {
+        body = (
+            <Stack.Screen
+                name="Root"
+                component={LoginScreen}
+                options={{ headerShown: false }}
+            />
         );
     }
 
