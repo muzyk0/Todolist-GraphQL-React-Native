@@ -38,7 +38,7 @@ export type Mutation = {
 
 
 export type MutationAddTaskArgs = {
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   todolistId: Scalars['Int'];
 };
@@ -98,15 +98,21 @@ export type MutationUpdateTodolistArgs = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
+  tasks: Array<Task>;
   todolists: Array<Todolist>;
   users: Array<User>;
+};
+
+
+export type QueryTasksArgs = {
+  id: Scalars['Int'];
 };
 
 export type Task = {
   __typename?: 'Task';
   createdAt: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
-  description: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   title: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -136,6 +142,24 @@ export type User = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type TaskSnippetFragment = { __typename?: 'Task', id: number, title: string, description?: string | null | undefined };
+
+export type TasksQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type TasksQuery = { __typename?: 'Query', tasks: Array<{ __typename?: 'Task', id: number, title: string, description?: string | null | undefined }> };
+
+export type AddTaskMutationVariables = Exact<{
+  todolistId: Scalars['Int'];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AddTaskMutation = { __typename?: 'Mutation', addTask: { __typename?: 'Task', id: number, title: string, description?: string | null | undefined } };
+
 export type RemoveTaskMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -143,14 +167,12 @@ export type RemoveTaskMutationVariables = Exact<{
 
 export type RemoveTaskMutation = { __typename?: 'Mutation', removeTask: boolean };
 
-export type TaskSnippetFragment = { __typename?: 'Task', id: number, title: string, description: string };
-
 export type TodolistSnippetFragment = { __typename?: 'Todolist', id: number, title: string, description?: string | null | undefined };
 
 export type TodolistsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TodolistsQuery = { __typename?: 'Query', todolists: Array<{ __typename?: 'Todolist', id: number, title: string, description?: string | null | undefined, tasks: Array<{ __typename?: 'Task', id: number, title: string, description: string }> }> };
+export type TodolistsQuery = { __typename?: 'Query', todolists: Array<{ __typename?: 'Todolist', id: number, title: string, description?: string | null | undefined, tasks: Array<{ __typename?: 'Task', id: number, title: string, description?: string | null | undefined }> }> };
 
 export type AddTodolistMutationVariables = Exact<{
   title: Scalars['String'];
@@ -222,6 +244,76 @@ export const UserSnippetFragmentDoc = gql`
   email
 }
     `;
+export const TasksDocument = gql`
+    query Tasks($id: Int!) {
+  tasks(id: $id) {
+    ...TaskSnippet
+  }
+}
+    ${TaskSnippetFragmentDoc}`;
+
+/**
+ * __useTasksQuery__
+ *
+ * To run a query within a React component, call `useTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTasksQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTasksQuery(baseOptions: Apollo.QueryHookOptions<TasksQuery, TasksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
+      }
+export function useTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TasksQuery, TasksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TasksQuery, TasksQueryVariables>(TasksDocument, options);
+        }
+export type TasksQueryHookResult = ReturnType<typeof useTasksQuery>;
+export type TasksLazyQueryHookResult = ReturnType<typeof useTasksLazyQuery>;
+export type TasksQueryResult = Apollo.QueryResult<TasksQuery, TasksQueryVariables>;
+export const AddTaskDocument = gql`
+    mutation AddTask($todolistId: Int!, $title: String!, $description: String) {
+  addTask(todolistId: $todolistId, title: $title, description: $description) {
+    ...TaskSnippet
+  }
+}
+    ${TaskSnippetFragmentDoc}`;
+export type AddTaskMutationFn = Apollo.MutationFunction<AddTaskMutation, AddTaskMutationVariables>;
+
+/**
+ * __useAddTaskMutation__
+ *
+ * To run a mutation, you first call `useAddTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTaskMutation, { data, loading, error }] = useAddTaskMutation({
+ *   variables: {
+ *      todolistId: // value for 'todolistId'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useAddTaskMutation(baseOptions?: Apollo.MutationHookOptions<AddTaskMutation, AddTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTaskMutation, AddTaskMutationVariables>(AddTaskDocument, options);
+      }
+export type AddTaskMutationHookResult = ReturnType<typeof useAddTaskMutation>;
+export type AddTaskMutationResult = Apollo.MutationResult<AddTaskMutation>;
+export type AddTaskMutationOptions = Apollo.BaseMutationOptions<AddTaskMutation, AddTaskMutationVariables>;
 export const RemoveTaskDocument = gql`
     mutation RemoveTask($id: Int!) {
   removeTask(id: $id)

@@ -30,7 +30,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 export type RootTabParamList = {
     Home: undefined;
     TabTwo: undefined;
-    TodoList: { tasks: TaskSnippetFragment };
+    TodoList: { title: string; todolistId: number; description: string };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

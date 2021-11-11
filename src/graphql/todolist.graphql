@@ -1,9 +1,3 @@
-fragment TaskSnippet on Task {
-    id
-    title
-    description
-}
-
 fragment TodolistSnippet on Todolist {
     id
     title

@@ -1,3 +1,21 @@
+fragment TaskSnippet on Task {
+    id
+    title
+    description
+}
+
+query Tasks($id: Int!) {
+    tasks(id: $id) {
+        ...TaskSnippet
+    }
+}
+
+mutation AddTask($todolistId: Int!, $title: String!, $description: String) {
+    addTask(todolistId: $todolistId, title: $title, description: $description) {
+        ...TaskSnippet
+    }
+}
+
 mutation RemoveTask($id: Int!) {
     removeTask(id: $id)
 }

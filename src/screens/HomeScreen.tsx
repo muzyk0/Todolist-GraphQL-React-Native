@@ -7,7 +7,7 @@ import * as yup from "yup";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View, ScrollView } from "../components/Themed";
-import Todolist from "../components/Todolist/Todolist";
+import TodolistItem from "../components/Todolist/TodolistItem";
 import {
     TodolistsDocument,
     useAddTodolistMutation,
@@ -70,6 +70,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
             <ScrollView style={styles.scrollContainer}>
                 <Text style={styles.title}>Todo Lists</Text>
 
+                {/* TODO: duplicate code => TodoListScreen */}
                 <View style={styles.inputContainer}>
                     <View>
                         <Controller
@@ -107,15 +108,20 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
                 />
                 {data.todolists.map((todolist) => {
                     const onRemoveTodolistClick = async () => {
-                        await removeTodolist({
+                        const result = await removeTodolist({
                             variables: {
                                 id: todolist.id,
                             },
                             refetchQueries: ["Todolists"],
                         });
+
+                        //TODO: сделать универсальный алерт
+                        if (result.errors) {
+                            alert(result.errors[0].message);
+                        }
                     };
                     return (
-                        <Todolist
+                        <TodolistItem
                             key={todolist.id}
                             todolist={todolist}
                             onRemoveTodolist={onRemoveTodolistClick}

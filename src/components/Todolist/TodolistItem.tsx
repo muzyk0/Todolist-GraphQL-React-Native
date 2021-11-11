@@ -7,6 +7,7 @@ import useColorScheme from "../../../hooks/useColorScheme";
 
 import Colors from "../../constants/Colors";
 import { TodolistsQuery } from "../../generated/graphql";
+import TodolistScreen from "../../screens/TodolistScreen";
 import { RootTabParamList } from "../../types";
 import { IconButton } from "../Login/IconButton";
 import { MonoText } from "../StyledText";
@@ -20,8 +21,8 @@ interface Props {
     onRemoveTodolist: () => void;
 }
 
-export default function Todolist({
-    todolist: { title, description, tasks },
+export default function TodolistItem({
+    todolist: { title, description, id: todolistId },
     onRemoveTodolist,
     ...props
 }: Props) {
@@ -44,7 +45,7 @@ export default function Todolist({
                     lightColor="rgba(0,0,0,0.8)"
                     darkColor="rgba(255,255,255,0.8)"
                 >
-                    {description?.slice(0, 15)}
+                    {description?.slice(0, 15)}...
                 </Text>
             </View>
 
@@ -53,7 +54,9 @@ export default function Todolist({
                     <Pressable
                         onPress={() => {
                             navigation.navigate("Todolist", {
-                                tasks: tasks,
+                                title,
+                                description,
+                                todolistId,
                             } as any);
                         }}
                     >
